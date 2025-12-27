@@ -58,6 +58,27 @@ public class Main {
         return null;
     }
 
+    public static void main(String[] args) {
+        Main main = new Main();
+        List<City> allCities = main.fetchData(main);
+        main.shutdown();
+    }
+
+    private List<City> fetchData(Main main) {
+        try (Session session = main.sessionFactory.getCurrentSession()) {
+            List<City> allCities = new ArrayList<>();
+            session.beginTransaction();
+
+            int totalCount = main.cityDAO.getTotalCount();
+            int step = 500;
+            for (int i = 0; i < totalCount; i += step) {
+                allCities.addAll(main.cityDAO.getItems(i, step));
+            }
+            session.getTransaction().commit();
+            return allCities;
+        }
+    }
+
     private void shutdown() {
         if (nonNull(sessionFactory)) {
             sessionFactory.close();
@@ -66,10 +87,4 @@ public class Main {
             redisClient.shutdown();
         }
     }
-
-    public static void main(String[] args) {
-
-    }
-
-
 }
