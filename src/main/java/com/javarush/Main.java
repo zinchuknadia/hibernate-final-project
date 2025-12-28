@@ -83,7 +83,12 @@ public class Main {
         main.testRedisData(ids);
         long stopRedis = System.currentTimeMillis();
 
+        long startMysql = System.currentTimeMillis();
+        main.testMysqlData(ids);
+        long stopMysql = System.currentTimeMillis();
+
         System.out.printf("%s:\t%d ms\n", "Redis", (stopRedis - startRedis));
+        System.out.printf("%s:\t%d ms\n", "MySQL", (stopMysql - startMysql));
 
         main.shutdown();
     }
@@ -160,6 +165,17 @@ public class Main {
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    private void testMysqlData(List<Integer> ids) {
+        try (Session session = sessionFactory.getCurrentSession()) {
+            session.beginTransaction();
+            for (Integer id : ids) {
+                City city = cityDAO.getById(id);
+                Set<CountryLanguage> languages = city.getCountry().getLanguages();
+            }
+            session.getTransaction().commit();
         }
     }
 
