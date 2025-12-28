@@ -9,7 +9,7 @@ services:
     image: mysql:8.0.36
     restart: unless-stopped
     ports:
-      - "3037:3306"
+      - "3307:3306"
     env_file:
       - .env
     volumes:
@@ -18,3 +18,4 @@ services:
 
 volumes:
   mysql_data:
+    driver: local
