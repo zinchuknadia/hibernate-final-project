@@ -1,0 +1,21 @@
+services:
+  redis:
+    image: redis:7.2
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0.36
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    env_file:
+      - .env
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  mysql_data:
+    driver: local
